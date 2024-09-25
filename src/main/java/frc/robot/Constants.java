@@ -39,7 +39,7 @@ public final class Constants {
          public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
             new Translation2d(wheelBase / 2.0, -trackWidth / 2.0), //0
             new Translation2d(-wheelBase / 2.0, trackWidth / 2.0), //1
-            new Translation2d(wheelBase / -2.0, trackWidth / -2.0), //2
+            new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0), //2
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0)); //3
 
             /*Values that fixed Chinchila:
