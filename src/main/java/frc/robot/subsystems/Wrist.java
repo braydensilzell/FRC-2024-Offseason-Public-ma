@@ -25,7 +25,7 @@ public class Wrist extends SubsystemBase {
 
     this.m_wristMotor.setPosition(0);
     this.m_wristMotor.set(0);
-    //hi
+    //
   }
    /**
    * PID wrist to position

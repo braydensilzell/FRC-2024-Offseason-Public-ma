@@ -43,7 +43,7 @@ public class SwerveModule {
         mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
         resetToAbsolute();
 
-        /* Drive Motor Config */
+        /* Drive Motor Config *///
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID, "rio");
         mDriveMotor.getConfigurator().apply(Robot.ctreConfigs.swerveDriveFXConfig);
         mDriveMotor.getConfigurator().setPosition(0.0);
