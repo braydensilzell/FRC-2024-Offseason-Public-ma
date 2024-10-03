@@ -10,24 +10,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.ShooterConstants;
+import frc.robot.subsystems.Util.ErrorCheckUtil;
+import frc.robot.subsystems.Util.TalonFXFactory;
+import frc.robot.subsystems.Util.ErrorCheckUtil.CommonErrorNames;
 
 public class ShooterSubsystem extends SubsystemBase{
 
-  private TalonFX shooterTalonLeader = configureShooterTalon(TalonFX.createTalon(ShooterConstants.shooterTalonLeaderID,
+  private TalonFX shooterTalonLeader = configureShooterTalon(TalonFXFactory.createTalon(ShooterConstants.shooterTalonLeaderID,
     ShooterConstants.shooterTalonCANBus, ShooterConstants.kShooterConfiguration));
-  private TalonFX shooterTalonFollower = configureShooterTalon(TalonFX.createTalon(ShooterConstants.shooterTalonFollowerID,
+  private TalonFX shooterTalonFollower = configureShooterTalon(TalonFXFactory.createTalon(ShooterConstants.shooterTalonFollowerID,
       ShooterConstants.shooterTalonCANBus, ShooterConstants.kShooterConfiguration));
 
-  private Orchestra m_orchestra = new Orchestra();
-
   public ShooterSubsystem() {
+
     shooterTalonFollower.setControl(ShooterConstants.followerControl);
 
-    m_orchestra.addInstrument(shooterTalonLeader);
-    m_orchestra.loadMusic("wonderwall.chrp");
   }
-//
+
     /**
    * Set both shooter motors to the same speed
    * 
@@ -54,13 +55,19 @@ public class ShooterSubsystem extends SubsystemBase{
     }
   }
 
+  private TalonFX configureShooterTalon(TalonFX motor) {
+
+    ErrorCheckUtil.checkError(
+        motor.getVelocity().setUpdateFrequency(ShooterConstants.kShooterVelocityUpdateFrequency,
+            TunerConstants.kConfigTimeoutSeconds),
+        CommonErrorNames.UpdateFrequency(motor.getDeviceID()));
+    return motor;
+  }
+
   public double getVelocity() {
     return shooterTalonFollower.getVelocity().getValue();
   }
 
-  public void singWonderwall() {
-    m_orchestra.play();
-  }
 
   public void stop() {
     shooterTalonLeader.setControl(new DutyCycleOut(0));

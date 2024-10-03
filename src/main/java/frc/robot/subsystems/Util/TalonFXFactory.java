@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.Util;
 
 // Modified from 254's TalonFXFactory to use the Phoenix 6 API
 // See https://github.com/Team254/FRC-2023-Public/blob/main/src/main/java/com/team254/lib/drivers/TalonFXFactory.java
@@ -9,6 +9,8 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import frc.robot.subsystems.Util.ErrorCheckUtil.CommonErrorNames;
 
 /**
  * Creates CANTalon objects and configures all the parameters we care about to
@@ -73,10 +75,10 @@ public class TalonFXFactory {
         talon.setPosition(0);
 
         motorConfig = config;
-        
-        return talon;
 
         // talon.optimizeBusUtilization();
-    
+        ErrorCheckUtil.checkError(talon.getConfigurator().apply(motorConfig), CommonErrorNames.ConfiguringTalon(id));
+
+        return talon;
     }
 }
