@@ -11,6 +11,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -21,18 +22,24 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Shoot;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.Arm.Wrist;
 
 public class RobotContainer {
   private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  public final CommandXboxController driver = new CommandXboxController(0); // My joystick
+  public final CommandXboxController driver = new CommandXboxController(1); // My joystick
+  private final Joystick driverr = new Joystick(0);
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
-  ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+  private final Wrist m_wristSubsystem = new Wrist();
+   private final JoystickButton wristUp = new JoystickButton(driverr, XboxController.Button.kY.value);
+    private final JoystickButton wristDown = new JoystickButton(driverr, XboxController.Button.kA.value);
 
-//private final JoystickButton wristUp = new JoystickButton(driverr, XboxController.Button.kX.value);
-    //private final JoystickButton wristDown = new JoystickButton(driverr, XboxController.Button.kB.value);
+
+  ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
+  //private final CommandXboxController wristUp = new CommandXboxController(XboxController.Button.kX.value);
+  //private final CommandXboxController wristDown = new CommandXboxController(XboxController.Button.kB.value);
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -52,8 +59,9 @@ public class RobotContainer {
 
   public void configureButtonbindings() {
     
-      driver.rightTrigger().whileTrue(new Shoot(m_shooterSubsystem));
-      //driver.rightTrigger().whileFalse(new Shoot(m_shooterSubsystem));
+     
+       wristUp.onTrue(new InstantCommand(() -> m_wristSubsystem.setAngle(Rotation2d.fromDegrees(20))));
+        wristDown.onTrue(new InstantCommand(() -> m_wristSubsystem.setAngle(Rotation2d.fromDegrees(0))));
       
   }
   
